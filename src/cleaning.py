@@ -1,31 +1,59 @@
 import pandas as pd
 import logging
-import re
 from pathlib import Path
 
-ad_events_fp = Path(r"data/raw/ad_events.csv")
-ads_fp = Path(r"data/raw/ads.csv")
-campaigns_fp = Path(r"data/raw/campaigns.csv")
-users_fp = Path(r"data/raw/users.csv")
+# --- Project paths ---
+PROJECT_ROOT = Path(__file__).parent.parent
+DATA_RAW = PROJECT_ROOT / "data" / "raw"
 
-read_ad_events = pd.read_csv(ad_events_fp)
-read_ads_fp = pd.read_csv(ads_fp)
-read_campaigns_fp = pd.read_csv(campaigns_fp)
-read_users_fp = pd.read_csv(users_fp)
+# File paths
+CSV_FILES = {
+    "ad_events": DATA_RAW / "ad_events.csv",
+    "ads": DATA_RAW / "ads.csv",
+    "campaigns": DATA_RAW / "campaigns.csv",
+    "users": DATA_RAW / "users.csv",
+}
 
-# print(read_ad_events.head())
-# print(read_ads_fp.head())
-# print(read_campaigns_fp.head())
-# print(read_users_fp.head())
- 
-print('The current working directory is ' + str((Path.cwd())))
 # Function to import our CSVs
 
-# One function for each CSV to clean it
+
+def import_csvs(filepaths):
+    dataframes = {}
+    for name, fp in filepaths.items():
+        try:
+            df = pd.read_csv(fp)
+            dataframes[name] = df
+            logging.info(f"Loaded {name} from {fp}")
+        except Exception as e:
+            logging.error(f"Failed to load {name} from {fp}: {e}")
+            raise
+    return dataframes
+
+
+# Testing
+# logging.basicConfig(level=logging.INFO)
+dfs = import_csvs(CSV_FILES)
 
 # Function to export cleaned CSVs into data/cleaned
 
-# Use logging to track the cleaning process
 
+def clean_ad_events(df):
+    df = df.copy()
+
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+    df["user_id"] = df["user_id"].astype(str).str.strip()
+
+    df["day_of_week"] = df["day_of_week"].astype("category")
+    df["time_of_day"] = df["time_of_day"].astype("category")
+    df["event_type"] = df["event_type"].astype("category")
+
+    df = df.drop_duplicates()
+
+    return df
+
+
+temp_df = clean_ad_events(dfs["ad_events"])
+print(temp_df.dtypes)
 
 # def import_csv(file_path):
