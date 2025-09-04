@@ -53,7 +53,13 @@ def clean_ad_events(df):
     return df
 
 
-temp_df = clean_ad_events(dfs["ad_events"])
-print(temp_df.dtypes)
+def clean_ads(df):
+    df = df.copy()
 
-# def import_csv(file_path):
+    # df["target_interests"] = df["target_interests"].str.split(",\s*") need to explode this to get one row per unique value / id. 
+    # df["target_interests"] = df["target_interests"].astype("category") 
+
+
+print(dfs["ads"].describe())
+
+
