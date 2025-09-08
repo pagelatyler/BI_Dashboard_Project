@@ -21,10 +21,10 @@ This project walks through the full workflow of a data analyst — from messy ra
 ---
 
 ## Tech Stack
-- **SQL (PostgreSQL):** Cleaning, structuring, and aggregating data.  
+- **SQL (PostgreSQL via Docker)** Database setup, cleaning, joins, KPI calculations.  
 - **Python (pandas, numpy):** Wrangling and feature engineering.  
 - **Power BI / Tableau:** Interactive dashboards and visualizations.  
-- **Git/GitHub:** Version control and project tracking.  
+- **Git/GitHub:** Version control and project tracking.
 
 ---
 
@@ -49,3 +49,4 @@ BI_Dashboard_Project/
 4. **Insights & Recommendations:** Documented findings and suggested actions based on the data.  
 
 ---
+
