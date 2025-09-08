@@ -39,6 +39,7 @@ dfs = import_csvs(CSV_FILES)
 
 def clean_ad_events(df):
     df = df.copy()
+    df = df.drop_duplicates()
 
     df["timestamp"] = pd.to_datetime(df["timestamp"])
 
@@ -48,18 +49,57 @@ def clean_ad_events(df):
     df["time_of_day"] = df["time_of_day"].astype("category")
     df["event_type"] = df["event_type"].astype("category")
 
-    df = df.drop_duplicates()
+    
 
     return df
 
 
 def clean_ads(df):
     df = df.copy()
+    df = df.drop_duplicates()
 
-    # df["target_interests"] = df["target_interests"].str.split(",\s*") need to explode this to get one row per unique value / id. 
-    # df["target_interests"] = df["target_interests"].astype("category") 
+    df["target_interests"] = df["target_interests"].str.split(",\s*").explode()
+    df["target_interests"] = df["target_interests"].str.strip()
+
+    df["target_interests"] = df["target_interests"].astype("string").str.strip() 
+    df["ad_platform"] = df["ad_platform"].astype("string").str.strip()
+    df["ad_type"] = df["ad_type"].astype("string").str.strip()
+    df["target_gender"] = df["target_gender"].astype("string").str.strip()
+
+    return df
 
 
-print(dfs["ads"].describe())
+def clean_campaigns(df):
+    df = df.copy()
+    df = df.drop_duplicates()
+
+    df["name"] = df["name"].astype("string").str.strip()
+    df["start_date"] = pd.to_datetime(df["start_date"]).dt.date
+    df["end_date"] = pd.to_datetime(df["end_date"]).dt.date
+
+    return df
 
 
+def clean_users(df):
+    df = df.copy()
+    df = df.drop_duplicates()
+
+    #convert user_gender, country, location, user_id to str
+    df["user_id"] = df["user_id"].astype("string").str.strip()
+    df["country"] = df["country"].astype("string").str.strip()
+    df["user_gender"] = df["user_gender"].astype("string").str.strip()
+    df["location"] = df["location"].astype("string").str.strip()
+
+    #convert interests to str and explode
+    df["interests"] = df["interests"].str.split(",\s*").explode()
+    df["interests"] = df["interests"].str.strip()
+
+    
+    return df
+
+
+
+# after this last function I dont think we'll need more for this file? Will look to export, but can maybe do that in a different file
+testing = dfs["users"]
+print(testing.describe)
+print(testing.head(10))
