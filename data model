@@ -1,0 +1,73 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table follows {
+  following_user_id integer
+  followed_user_id integer
+  created_at timestamp
+}
+
+
+Table posts {
+  id integer [primary key]
+  title varchar
+  body text [note: 'Content of the post']
+  user_id integer [not null]
+  status varchar
+  created_at timestamp
+}
+
+
+
+table ad_events {
+  event_id INTEGER [primary key]
+  ad_id INTEGER
+  user_id VARCHAR(50) 
+  timestamp TIMESTAMP
+  day_of_week VARCHAR(50)
+  time_of_day VARCHAR(50)
+  event_type VARCHAR(50)
+}
+
+table ads {
+  ad_id INTEGER [primary key]
+  campaign_id INTEGER
+  ad_platform VARCHAR(50)
+  ad_type VARCHAR(50)
+  target_gender VARCHAR(50)
+  target_age_group VARCHAR(20)
+  target_interests VARCHAR(50)
+}
+
+table campaigns {
+  campaign_id INTEGER [primary key]
+  name VARCHAR(50)
+  start_date DATE
+  end_date DATE 
+  duration_days INTEGER
+  total_budget FLOAT
+}
+
+table users {
+  user_id VARCHAR(20)
+  user_gender ENUM 
+  user_age VARCHAR(3)
+  age_group VARCHAR(10)
+  country VARCHAR(50)
+  location VARCHAR(50)
+  interests ENUM
+
+}
+
+
+
+CREATE TABLE ads_events {
+  event_id INTEGER [primary key]
+  ad_id INTEGER
+  user_id VARCHAR(50) 
+  timestamp TIMESTAMP
+  day_of_week VARCHAR(50)
+  time_of_day VARCHAR(50)
+  event_type VARCHAR(50)
+}
+

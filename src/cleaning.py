@@ -14,8 +14,7 @@ CSV_FILES = {
     "users": DATA_RAW / "users.csv",
 }
 
-# Function to import our CSVs
-
+# Function to import CSVs
 
 def import_csvs(filepaths):
     dataframes = {}
@@ -49,7 +48,6 @@ def clean_ad_events(df):
     df["time_of_day"] = df["time_of_day"].astype("category")
     df["event_type"] = df["event_type"].astype("category")
 
-    
 
     return df
 
@@ -57,9 +55,14 @@ def clean_ad_events(df):
 def clean_ads(df):
     df = df.copy()
     df = df.drop_duplicates()
+    df = df.drop(columns =["ad_id"])
 
-    df["target_interests"] = df["target_interests"].str.split(",\s*").explode()
+    df["target_interests"] = df["target_interests"].str.split(r",\s*")
+    df = df.explode("target_interests")
     df["target_interests"] = df["target_interests"].str.strip()
+
+    df = df.reset_index(drop=True)
+    df["ad_id"] = df.index + 1
 
     df["target_interests"] = df["target_interests"].astype("string").str.strip() 
     df["ad_platform"] = df["ad_platform"].astype("string").str.strip()
@@ -91,15 +94,19 @@ def clean_users(df):
     df["location"] = df["location"].astype("string").str.strip()
 
     #convert interests to str and explode
-    df["interests"] = df["interests"].str.split(",\s*").explode()
+    df["interests"] = df["interests"].str.split(r",\s*")
+    df = df.explode("interests")
     df["interests"] = df["interests"].str.strip()
+    
+    df = df.reset_index(drop=True)
+    df["user_key"] = df.index + 1
 
     
     return df
 
 
 
-# after this last function I dont think we'll need more for this file? Will look to export, but can maybe do that in a different file
-testing = dfs["users"]
-print(testing.describe)
-print(testing.head(10))
+# after this last function I dont think we'll need\ more for this file? Will look to export, but can maybe do that in a different file
+testing = clean_users(dfs["users"])
+print(testing.head(50))
+print(testing.dtypes)
